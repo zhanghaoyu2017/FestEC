@@ -3,6 +3,7 @@ package com.example.zhanghaoyu.festec;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.latte_core.delegates.LatteDelegate;
 import com.example.latte_core.net.RestClient;
@@ -25,15 +26,15 @@ public class ExampleDelegate extends LatteDelegate {
     @Override
     public void onBindView(@Nullable Bundle savedInstanceState, View rootView) {
 
+        testRestClient();
     }
     private void testRestClient(){
         RestClient.bulider()
-                .url("")
-                .params("","")
+                .url("http://news.baidu.com/")
                 .success(new ISuccess() {
                     @Override
                     public void onSuccess(String response) {
-
+                        Toast.makeText(getContext(),response,Toast.LENGTH_LONG).show();
                     }
                 })
                 .failure(new IFailure() {
