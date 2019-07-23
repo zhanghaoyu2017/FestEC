@@ -1,10 +1,14 @@
 package com.example.latte_core.net;
 
+import android.content.Context;
+
 import com.example.latte_core.net.callback.IError;
 import com.example.latte_core.net.callback.IFailure;
 import com.example.latte_core.net.callback.IRequest;
 import com.example.latte_core.net.callback.ISuccess;
 import com.example.latte_core.net.callback.RequestCallBacks;
+import com.example.latte_core.ui.LatteLoader;
+import com.example.latte_core.ui.LoaderStyle;
 
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -27,10 +31,14 @@ public class RestClient {
     private final IFailure FAILURE;
     private final IError ERROR;
     private final RequestBody BODY;
+    private final LoaderStyle LOADER_STYLE;
+    private final Context CONTEXT;
+
 
     public RestClient(String url, Map<String, Object> params,
                       IRequest request, ISuccess success, IFailure failure,
-                      IError error, RequestBody body) {
+                      IError error, RequestBody body, Context context,
+                      LoaderStyle loaderStyle) {
         this.URL = url;
         PARAMS.putAll(params);
         this.REQUEST = request;
@@ -38,6 +46,8 @@ public class RestClient {
         this.FAILURE = failure;
         this.ERROR = error;
         this.BODY = body;
+        this.CONTEXT = context;
+        this.LOADER_STYLE = loaderStyle;
     }
 
     public static RestClientBulider bulider() {
@@ -50,6 +60,9 @@ public class RestClient {
 
         if (REQUEST != null) {
             REQUEST.onRequestStart();
+        }
+        if (LOADER_STYLE != null) {
+            LatteLoader.showLoading(CONTEXT, LOADER_STYLE);
         }
         switch (method) {
             case GET:
@@ -73,19 +86,22 @@ public class RestClient {
     }
 
     private Callback getRequestCallback() {
-        return (Callback) new RequestCallBacks(REQUEST, SUCCESS, FAILURE, ERROR);
+        return (Callback) new RequestCallBacks(REQUEST, SUCCESS, FAILURE, ERROR, LOADER_STYLE);
     }
 
-    public final void get(){
+    public final void get() {
         request(HttpMethod.GET);
     }
-    public final void post(){
+
+    public final void post() {
         request(HttpMethod.POST);
     }
-    public final void put(){
+
+    public final void put() {
         request(HttpMethod.PUT);
     }
-    public final void delete(){
+
+    public final void delete() {
         request(HttpMethod.DELETE);
     }
 
