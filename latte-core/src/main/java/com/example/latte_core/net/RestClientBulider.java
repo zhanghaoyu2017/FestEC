@@ -8,6 +8,7 @@ import com.example.latte_core.net.callback.IRequest;
 import com.example.latte_core.net.callback.ISuccess;
 import com.example.latte_core.ui.LoaderStyle;
 
+import java.io.File;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -30,6 +31,7 @@ public class RestClientBulider {
     private RequestBody mBody= null;
     private Context mContext = null;
     private LoaderStyle mLoaderStyle = null;
+    private File mFile = null;
     RestClientBulider() {
 
     }
@@ -47,6 +49,14 @@ public class RestClientBulider {
     public final RestClientBulider params(String key, Object value) {
 
         PARAMS.put(key, value);
+        return this;
+    }
+    public final RestClientBulider file(File file) {
+        this.mFile = file;
+        return this;
+    }
+    public final RestClientBulider file(String file) {
+        this.mFile = new File(file);
         return this;
     }
 
@@ -83,6 +93,6 @@ public class RestClientBulider {
 
     public final RestClient build() {
         return new RestClient(mUrl, PARAMS, mIRequest, mISuccess, mIFailure, mIError, mBody,mContext,
-                mLoaderStyle);
+                mLoaderStyle,mFile);
     }
 }
